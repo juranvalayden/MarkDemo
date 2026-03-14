@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/1 - Presentation/">
+    <Project Path="MarkDemo.Api/MarkDemo.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/2 - Application/">
+    <Project Path="MarkDemo.Application/MarkDemo.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/3 - Infrastructure/">
+    <Project Path="MarkDemo.Infrastructure/MarkDemo.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/4 - Domain/">
+    <Project Path="MarkDemo.Domain/MarkDemo.Domain.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+</Solution>
