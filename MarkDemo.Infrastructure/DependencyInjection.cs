@@ -1,4 +1,6 @@
-﻿using MarkDemo.Infrastructure.Configurations.Persistence;
+﻿using MarkDemo.Domain.Interfaces;
+using MarkDemo.Infrastructure.Configurations.Persistence;
+using MarkDemo.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -20,5 +22,7 @@ public static class DependencyInjection
                 b.MigrationsHistoryTable(HistoryRepository.DefaultTableName, "SalesLT");
             });
         });
+
+        services.AddScoped<ISalesOrderRepository, SalesOrderRepository>();
     }
 }

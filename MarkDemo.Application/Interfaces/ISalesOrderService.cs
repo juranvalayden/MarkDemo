@@ -1,14 +1,14 @@
-﻿using MarkDemo.Domain.Entities;
+﻿using MarkDemo.Application.Dtos;
 
-namespace MarkDemo.Domain.Interfaces;
+namespace MarkDemo.Application.Interfaces;
 
-public interface ISalesOrderRepository
+public interface ISalesOrderService
 {
     // get all sales order headers
-    Task<IEnumerable<SalesOrderHeader>> GetSalesOrderHeadersAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<SalesOrderHeaderDto>> GetSalesOrderHeadersAsync(CancellationToken cancellationToken = default);
 
     // get sales order header by id
-    Task<SalesOrderHeader?> GetSalesOrderHeaderByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<SalesOrderHeaderDto?> GetSalesOrderHeaderByIdAsync(int id, CancellationToken cancellationToken = default);
 
     // add
     // void AddSalesOrderHeader(SalesOrderHeader entityForCreation);
