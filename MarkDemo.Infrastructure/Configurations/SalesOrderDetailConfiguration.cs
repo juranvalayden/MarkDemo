@@ -1,6 +1,7 @@
 ﻿using MarkDemo.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace MarkDemo.Infrastructure.Configurations;
 
@@ -8,7 +9,7 @@ public class SalesOrderDetailConfiguration : IEntityTypeConfiguration<SalesOrder
 {
     public void Configure(EntityTypeBuilder<SalesOrderDetail> builder)
     {
-        builder.ToTable("SalesOrderDetail");
+        builder.ToTable("SalesOrderDetail", "SalesLT");
 
         builder.HasKey(d => d.Id)
             .HasName("PK_SalesOrderDetail");
@@ -40,9 +41,11 @@ public class SalesOrderDetailConfiguration : IEntityTypeConfiguration<SalesOrder
             .IsRequired()
             .HasColumnType("money");
 
+        // Computed column: LineTotal
         builder.Property(d => d.LineTotal)
             .HasColumnType("numeric(38,6)")
-            .IsRequired(false);
+            .ValueGeneratedOnAddOrUpdate()
+            .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
         builder.Property(d => d.RowGuid)
             .IsRequired()
@@ -54,6 +57,7 @@ public class SalesOrderDetailConfiguration : IEntityTypeConfiguration<SalesOrder
             .HasColumnType("datetime")
             .HasPrecision(7);
 
+        // Relationship back to SalesOrderHeader
         builder.HasOne(d => d.SalesOrderHeader)
             .WithMany(h => h.SalesOrderDetails)
             .HasForeignKey(d => d.SalesOrderHeaderId);

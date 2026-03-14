@@ -44,7 +44,6 @@ public static class Mapper
             ShipDate = dto.ShipDate,
             Status = dto.Status,
             OnlineOrderFlag = dto.OnlineOrderFlag,
-            SalesOrderNumber = dto.SalesOrderNumber,
             PurchaseOrderNumber = dto.PurchaseOrderNumber,
             AccountNumber = dto.AccountNumber,
             CustomerId = dto.CustomerId,
@@ -55,10 +54,19 @@ public static class Mapper
             SubTotal = dto.SubTotal,
             TaxAmt = dto.TaxAmt,
             Freight = dto.Freight,
-            TotalDue = dto.TotalDue,
             Comment = dto.Comment,
             RowGuid = dto.RowGuid,
-            ModifiedDate = dto.ModifiedDate
+            ModifiedDate = dto.ModifiedDate,
+            SalesOrderDetails = dto.SalesOrderDetails.Select(s => new SalesOrderDetail
+            {
+                OrderQty = s.OrderQty,
+                ProductId = s.ProductId,
+                UnitPrice = s.UnitPrice,
+                UnitPriceDiscount = s.UnitPriceDiscount,
+                RowGuid = s.RowGuid,
+                ModifiedDate = s.ModifiedDate,
+                SalesOrderHeaderId = s.SalesOrderHeaderId
+            }).ToList()
         };
     }
 
@@ -202,5 +210,7 @@ public static class Mapper
         entityToBeUpdated.CreditCardApprovalCode = updatedDto.CreditCardApprovalCode;
         entityToBeUpdated.Comment = updatedDto.Comment;
         entityToBeUpdated.ModifiedDate = updatedDto.ModifiedDate;
+
+        return entityToBeUpdated;
     }
 }

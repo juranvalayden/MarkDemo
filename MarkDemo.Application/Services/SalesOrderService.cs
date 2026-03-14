@@ -21,13 +21,13 @@ public class SalesOrderService : ISalesOrderService
     {
         try
         {
-            var entities = await _salesOrderRepository.GetSalesOrderHeadersAsync(cancellationToken);
+            var entities = await _salesOrderRepository.GetAllAsync(cancellationToken);
             // business logic applied here
             return Mapper.MapFromEntitiesToDtos(entities);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error occurred GetSalesOrderHeadersAsync");
+            _logger.LogError(e, "Error occurred GetAllAsync");
             return new List<SalesOrderHeaderDto>();
         }
     }
@@ -36,7 +36,7 @@ public class SalesOrderService : ISalesOrderService
     {
         try
         {
-            var entity = await _salesOrderRepository.GetSalesOrderHeaderByIdAsync(id, cancellationToken);
+            var entity = await _salesOrderRepository.GetByIdAsync(id, cancellationToken);
             // business logic applied here
             return entity == null
                 ? null
@@ -44,45 +44,51 @@ public class SalesOrderService : ISalesOrderService
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error occurred GetSalesOrderHeadersAsync");
+            _logger.LogError(e, "Error occurred GetAllAsync");
             return null;
         }
     }
 
-    public async Task<SalesOrderHeaderDto> AddSalesOrderHeaderAsync(SalesOrderHeaderForCreationDto salesOrderHeaderForCreationDto,
+    public async Task<SalesOrderHeaderDto?> AddSalesOrderHeaderAsync(SalesOrderHeaderForCreationDto salesOrderHeaderForCreationDto,
         CancellationToken cancellationToken = default)
     {
         var entityToBeCreated = Mapper.MapFromDtoToEntity(salesOrderHeaderForCreationDto);
 
-        var createdEntity = _salesOrderRepository.AddSalesOrderHeader(entityToBeCreated);
+        var createdEntity = _salesOrderRepository.Add(entityToBeCreated);
 
         var hasSaved = await _salesOrderRepository.SaveChangesAsync(cancellationToken);
 
         if (!hasSaved)
         {
-            _logger.LogError("Has not saved.... AddSalesOrderHeaderAsync");
+            _logger.LogError("Error creating SalesOrderHeader. AddSalesOrderHeaderAsync.");
+            return null;
         }
 
         var mappedDto = Mapper.MapFromEntityToDto(createdEntity);
         return mappedDto;
     }
 
-    public async Task<SalesOrderHeaderDto> UpdateSalesOrderHeaderAsync(int id, SalesOrderHeaderForUpdateDto salesOrderHeaderForUpdateDto,
+    public async Task<SalesOrderHeaderDto?> UpdateSalesOrderHeaderAsync(int id, SalesOrderHeaderForUpdateDto salesOrderHeaderForUpdateDto,
         CancellationToken cancellationToken = default)
     {
-        var entityToBeUpdated = await _salesOrderRepository.GetSalesOrderHeaderByIdAsync(id, cancellationToken);
+        var entity = await _salesOrderRepository.GetByIdAsync(id, cancellationToken);
 
-        if (entityToBeUpdated == null) return null;
+        if (entity == null)
+        {
+            _logger.LogError("Not found SalesOrderHeader with {Id}.... UpdateSalesOrderHeaderAsync", id);
+            return null;
+        }
 
-        var updatedEntity = Mapper.UpdateEntityWithDto(entityToBeUpdated, salesOrderHeaderForUpdateDto);
+        var updatedEntity = Mapper.UpdateEntityWithDto(entity, salesOrderHeaderForUpdateDto);
 
-        var dbUpdatedEntity = _salesOrderRepository.UpdateSalesOrderHeader(updatedEntity);
+        var dbUpdatedEntity = _salesOrderRepository.Update(updatedEntity);
 
         var hasSaved = await _salesOrderRepository.SaveChangesAsync(cancellationToken);
 
         if (!hasSaved)
-        {    
-            _logger.LogError("Has not saved.... UpdateSalesOrderHeaderAsync");
+        {
+            _logger.LogError("Error updating SalesOrderHeader with {Id}.... UpdateSalesOrderHeaderAsync", id);
+            return null;
         }
 
         var mappedDto = Mapper.MapFromEntityToDto(dbUpdatedEntity);
@@ -91,12 +97,23 @@ public class SalesOrderService : ISalesOrderService
 
     public async Task<bool> DeleteSalesOrderHeaderAsync(int id, CancellationToken cancellationToken = default)
     {
-        var entityToBeDeleted = await _salesOrderRepository.GetSalesOrderHeaderByIdAsync(id, cancellationToken);
+        var entityToBeDeleted = await _salesOrderRepository.GetByIdAsync(id, cancellationToken);
 
-        if (entityToBeDeleted == null) return false;
+        if (entityToBeDeleted == null)
+        {
+            _logger.LogError("Not found SalesOrderHeader with {Id}.... DeleteSalesOrderHeaderAsync", id);
+            return false;
+        }
 
-        _salesOrderRepository.DeleteSalesOrderHeader(entityToBeDeleted);
+        _salesOrderRepository.Delete(entityToBeDeleted);
 
-        return await _salesOrderRepository.SaveChangesAsync(cancellationToken);
+        var hasDeleted = await _salesOrderRepository.SaveChangesAsync(cancellationToken);
+
+        if (!hasDeleted)
+        {
+            _logger.LogError("Error deleting SalesOrderHeader with {Id}.... DeleteSalesOrderHeaderAsync", id);
+        }
+
+        return hasDeleted;
     }
 }

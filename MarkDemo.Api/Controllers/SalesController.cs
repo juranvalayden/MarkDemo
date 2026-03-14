@@ -27,12 +27,12 @@ public class SalesController : ControllerBase
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error occurred in GetSalesOrderHeadersAsync");
+            _logger.LogError(e, "Error occurred in GetAllAsync");
             return BadRequest();
         }
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("{id:int}", Name = "GetSalesOrderHeaderById")]
     public async Task<ActionResult<SalesOrderHeaderDto>> GetSalesOrderHeaderByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         try
@@ -45,8 +45,28 @@ public class SalesController : ControllerBase
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error occurred in GetSalesOrderHeaderByIdAsync");
+            _logger.LogError(e, "Error occurred in GetByIdAsync");
             return BadRequest();
         }
     }
+
+    [HttpPost]
+    public async Task<ActionResult<SalesOrderHeaderDto>> CreateSalesOrderAsync(SalesOrderHeaderForCreationDto salesOrderHeaderForCreationDto, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var createdSaleOrderHeader =
+                await _salesOrderService.AddSalesOrderHeaderAsync(salesOrderHeaderForCreationDto, cancellationToken);
+
+            if (createdSaleOrderHeader == null) return BadRequest();
+
+            return CreatedAtRoute("GetSalesOrderHeaderById", new { createdSaleOrderHeader.Id }, createdSaleOrderHeader);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error occurred in GetByIdAsync");
+            return BadRequest();
+        }
+    }
+
 }

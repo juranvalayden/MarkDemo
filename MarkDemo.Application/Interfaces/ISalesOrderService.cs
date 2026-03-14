@@ -11,10 +11,11 @@ public interface ISalesOrderService
     Task<SalesOrderHeaderDto?> GetSalesOrderHeaderByIdAsync(int id, CancellationToken cancellationToken = default);
 
     // add
-    Task<SalesOrderHeaderDto> AddSalesOrderHeaderAsync(SalesOrderHeaderForCreationDto salesOrderHeaderForCreationDto, CancellationToken cancellationToken = default);
+    Task<SalesOrderHeaderDto?> AddSalesOrderHeaderAsync(SalesOrderHeaderForCreationDto salesOrderHeaderForCreationDto,
+        CancellationToken cancellationToken = default);
 
     // update
-    Task<SalesOrderHeaderDto> UpdateSalesOrderHeaderAsync(int id, SalesOrderHeaderForUpdateDto salesOrderHeaderForUpdateDto, CancellationToken cancellationToken = default);
+    Task<SalesOrderHeaderDto?> UpdateSalesOrderHeaderAsync(int id, SalesOrderHeaderForUpdateDto salesOrderHeaderForUpdateDto, CancellationToken cancellationToken = default);
     
     // delete
     Task<bool> DeleteSalesOrderHeaderAsync(int id, CancellationToken cancellationToken = default);

@@ -8,7 +8,7 @@ public record SalesOrderHeaderForCreationDto
     public DateTime? ShipDate { get; init; }
     public byte Status { get; init; }
     public bool OnlineOrderFlag { get; init; }
-    public string? SalesOrderNumber { get; init; }
+    // SalesOrderNumber excluded (calculated by AdventureWorks)
     public string? PurchaseOrderNumber { get; init; }
     public string? AccountNumber { get; init; }
     public int CustomerId { get; init; }
@@ -19,8 +19,10 @@ public record SalesOrderHeaderForCreationDto
     public decimal SubTotal { get; init; }
     public decimal TaxAmt { get; init; }
     public decimal Freight { get; init; }
-    public decimal? TotalDue { get; init; }
+    // TotalDue excluded (calculated by AdventureWorks)
     public string? Comment { get; init; }
     public Guid RowGuid { get; init; }
     public DateTime ModifiedDate { get; init; }
+
+    public ICollection<SalesOrderDetailForCreationDto> SalesOrderDetails { get; init; } = new List<SalesOrderDetailForCreationDto>();
 }

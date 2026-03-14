@@ -33,6 +33,7 @@ namespace MarkDemo.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal?>("LineTotal")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("numeric(38,6)");
 
                     b.Property<DateTime>("ModifiedDate")
@@ -130,6 +131,7 @@ namespace MarkDemo.Infrastructure.Migrations
                         .HasColumnName("rowguid");
 
                     b.Property<string>("SalesOrderNumber")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasMaxLength(50)
                         .IsUnicode(true)
                         .HasColumnType("nvarchar(50)");
@@ -158,6 +160,7 @@ namespace MarkDemo.Infrastructure.Migrations
                         .HasColumnType("money");
 
                     b.Property<decimal?>("TotalDue")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("money");
 
                     b.HasKey("Id")

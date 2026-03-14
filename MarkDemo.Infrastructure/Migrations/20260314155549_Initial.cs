@@ -70,14 +70,14 @@ namespace MarkDemo.Infrastructure.Migrations
                 {
                     SalesOrderDetailID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    SalesOrderID = table.Column<int>(type: "int", nullable: false),
                     OrderQty = table.Column<short>(type: "smallint", nullable: false),
                     ProductID = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "money", nullable: false),
                     UnitPriceDiscount = table.Column<decimal>(type: "money", nullable: false),
                     LineTotal = table.Column<decimal>(type: "numeric(38,6)", nullable: true),
                     rowguid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ModifiedDate = table.Column<DateTime>(type: "datetime(7)", precision: 7, nullable: false),
-                    SalesOrderID = table.Column<int>(type: "int", nullable: false)
+                    ModifiedDate = table.Column<DateTime>(type: "datetime(7)", precision: 7, nullable: false)
                 },
                 constraints: table =>
                 {

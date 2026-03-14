@@ -17,7 +17,7 @@ public class SalesOrderRepository : ISalesOrderRepository
         _salesDbContext = salesDbContext ?? throw new ArgumentNullException(nameof(salesDbContext));
     }
 
-    public async Task<IEnumerable<SalesOrderHeader>> GetSalesOrderHeadersAsync(CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<SalesOrderHeader>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         try
         {
@@ -30,42 +30,47 @@ public class SalesOrderRepository : ISalesOrderRepository
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error occurred GetSalesOrderHeadersAsync getting sale.");
+            _logger.LogError(e, "Error occurred GetAllAsync getting sale.");
             return [];
         }
     }
 
-    public async Task<SalesOrderHeader?> GetSalesOrderHeaderByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<SalesOrderHeader?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         try
         {
-            var entity = await _salesDbContext.SalesOrderHeaders
+            return await _salesDbContext
+                .Set<SalesOrderHeader>()
                 .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
-
-            return entity;
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error occurred GetSalesOrderHeaderByIdAsync getting {Id}.", id);
+            _logger.LogError(e, "Error occurred GetByIdAsync getting {Id}.", id);
             return null;
         }
     }
 
-    public SalesOrderHeader? AddSalesOrderHeader(SalesOrderHeader entity)
+    public SalesOrderHeader Add(SalesOrderHeader entity)
     {
-        _salesDbContext.SalesOrderHeaders.Add(entity);
-        return entity;
+        return _salesDbContext
+            .Set<SalesOrderHeader>()
+            .Add(entity)
+            .Entity;
     }
 
-    public SalesOrderHeader? UpdateSalesOrderHeader(SalesOrderHeader entity)
+    public SalesOrderHeader Update(SalesOrderHeader entity)
     {
-        _salesDbContext.SalesOrderHeaders.Update(entity);
-        return entity;
+        return _salesDbContext
+            .Set<SalesOrderHeader>()
+            .Update(entity)
+            .Entity;
     }
 
-    public void DeleteSalesOrderHeader(SalesOrderHeader entityForDeletion)
+    public void Delete(SalesOrderHeader entityForDeletion)
     {
-        _salesDbContext.SalesOrderHeaders.Remove(entityForDeletion);
+        _salesDbContext
+            .Set<SalesOrderHeader>()
+            .Remove(entityForDeletion);
     }
 
     public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)

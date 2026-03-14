@@ -1,6 +1,7 @@
 ﻿using MarkDemo.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace MarkDemo.Infrastructure.Configurations;
 
@@ -8,7 +9,7 @@ public class SalesOrderHeaderConfiguration : IEntityTypeConfiguration<SalesOrder
 {
     public void Configure(EntityTypeBuilder<SalesOrderHeader> builder)
     {
-        builder.ToTable("SalesOrderHeader");
+        builder.ToTable("SalesOrderHeader", "SalesLT");
 
         builder.HasKey(s => s.Id)
             .HasName("PK_SalesOrderHeader");
@@ -45,10 +46,12 @@ public class SalesOrderHeaderConfiguration : IEntityTypeConfiguration<SalesOrder
             .IsRequired()
             .HasColumnType("bit");
 
+        // Computed column: SalesOrderNumber
         builder.Property(s => s.SalesOrderNumber)
             .HasMaxLength(50)
             .IsUnicode()
-            .IsRequired(false);
+            .ValueGeneratedOnAddOrUpdate()
+            .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
         builder.Property(s => s.PurchaseOrderNumber)
             .HasMaxLength(50)
@@ -97,9 +100,11 @@ public class SalesOrderHeaderConfiguration : IEntityTypeConfiguration<SalesOrder
             .IsRequired()
             .HasColumnType("money");
 
+        // Computed column: TotalDue
         builder.Property(s => s.TotalDue)
             .HasColumnType("money")
-            .IsRequired(false);
+            .ValueGeneratedOnAddOrUpdate()
+            .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
         builder.Property(s => s.Comment)
             .IsUnicode()
