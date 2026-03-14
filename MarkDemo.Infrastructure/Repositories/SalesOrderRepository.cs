@@ -22,6 +22,7 @@ public class SalesOrderRepository : ISalesOrderRepository
         try
         {
             var entities = await _salesDbContext.SalesOrderHeaders
+                .Include(soh => soh.SalesOrderDetails)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
@@ -47,6 +48,36 @@ public class SalesOrderRepository : ISalesOrderRepository
         {
             _logger.LogError(e, "Error occurred GetSalesOrderHeaderByIdAsync getting {Id}.", id);
             return null;
+        }
+    }
+
+    public SalesOrderHeader? AddSalesOrderHeader(SalesOrderHeader entity)
+    {
+        _salesDbContext.SalesOrderHeaders.Add(entity);
+        return entity;
+    }
+
+    public SalesOrderHeader? UpdateSalesOrderHeader(SalesOrderHeader entity)
+    {
+        _salesDbContext.SalesOrderHeaders.Update(entity);
+        return entity;
+    }
+
+    public void DeleteSalesOrderHeader(SalesOrderHeader entityForDeletion)
+    {
+        _salesDbContext.SalesOrderHeaders.Remove(entityForDeletion);
+    }
+
+    public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            return await _salesDbContext.SaveChangesAsync(cancellationToken) > 0;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error occurred SaveChangesAsync.");
+            return false;
         }
     }
 }

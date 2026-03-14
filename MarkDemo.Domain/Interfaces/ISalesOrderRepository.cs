@@ -10,13 +10,9 @@ public interface ISalesOrderRepository
     // get sales order header by id
     Task<SalesOrderHeader?> GetSalesOrderHeaderByIdAsync(int id, CancellationToken cancellationToken = default);
 
-    // add
-    // void AddSalesOrderHeader(SalesOrderHeader entityForCreation);
-    // update
-    // void UpdateSalesOrderHeader(int id, SalesOrderHeader entityForUpdate);
-    // delete
-    // void DeleteSalesOrderHeader(int id);
+    SalesOrderHeader? AddSalesOrderHeader(SalesOrderHeader entityForCreation);
+    SalesOrderHeader? UpdateSalesOrderHeader(SalesOrderHeader entity);
+    void DeleteSalesOrderHeader(SalesOrderHeader entityForDeletion);
 
-    // this should go into your unit of work
-    // Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default);
+    Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -48,4 +48,55 @@ public class SalesOrderService : ISalesOrderService
             return null;
         }
     }
+
+    public async Task<SalesOrderHeaderDto> AddSalesOrderHeaderAsync(SalesOrderHeaderForCreationDto salesOrderHeaderForCreationDto,
+        CancellationToken cancellationToken = default)
+    {
+        var entityToBeCreated = Mapper.MapFromDtoToEntity(salesOrderHeaderForCreationDto);
+
+        var createdEntity = _salesOrderRepository.AddSalesOrderHeader(entityToBeCreated);
+
+        var hasSaved = await _salesOrderRepository.SaveChangesAsync(cancellationToken);
+
+        if (!hasSaved)
+        {
+            _logger.LogError("Has not saved.... AddSalesOrderHeaderAsync");
+        }
+
+        var mappedDto = Mapper.MapFromEntityToDto(createdEntity);
+        return mappedDto;
+    }
+
+    public async Task<SalesOrderHeaderDto> UpdateSalesOrderHeaderAsync(int id, SalesOrderHeaderForUpdateDto salesOrderHeaderForUpdateDto,
+        CancellationToken cancellationToken = default)
+    {
+        var entityToBeUpdated = await _salesOrderRepository.GetSalesOrderHeaderByIdAsync(id, cancellationToken);
+
+        if (entityToBeUpdated == null) return null;
+
+        var updatedEntity = Mapper.UpdateEntityWithDto(entityToBeUpdated, salesOrderHeaderForUpdateDto);
+
+        var dbUpdatedEntity = _salesOrderRepository.UpdateSalesOrderHeader(updatedEntity);
+
+        var hasSaved = await _salesOrderRepository.SaveChangesAsync(cancellationToken);
+
+        if (!hasSaved)
+        {    
+            _logger.LogError("Has not saved.... UpdateSalesOrderHeaderAsync");
+        }
+
+        var mappedDto = Mapper.MapFromEntityToDto(dbUpdatedEntity);
+        return mappedDto;
+    }
+
+    public async Task<bool> DeleteSalesOrderHeaderAsync(int id, CancellationToken cancellationToken = default)
+    {
+        var entityToBeDeleted = await _salesOrderRepository.GetSalesOrderHeaderByIdAsync(id, cancellationToken);
+
+        if (entityToBeDeleted == null) return false;
+
+        _salesOrderRepository.DeleteSalesOrderHeader(entityToBeDeleted);
+
+        return await _salesOrderRepository.SaveChangesAsync(cancellationToken);
+    }
 }

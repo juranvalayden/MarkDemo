@@ -34,6 +34,45 @@ public static class Mapper
         };
     }
 
+    public static SalesOrderHeader MapFromDtoToEntity(SalesOrderHeaderForCreationDto dto)
+    {
+        return new SalesOrderHeader
+        {
+            RevisionNumber = dto.RevisionNumber,
+            OrderDate = dto.OrderDate,
+            DueDate = dto.DueDate,
+            ShipDate = dto.ShipDate,
+            Status = dto.Status,
+            OnlineOrderFlag = dto.OnlineOrderFlag,
+            SalesOrderNumber = dto.SalesOrderNumber,
+            PurchaseOrderNumber = dto.PurchaseOrderNumber,
+            AccountNumber = dto.AccountNumber,
+            CustomerId = dto.CustomerId,
+            ShipToAddressId = dto.ShipToAddressId,
+            BillToAddressId = dto.BillToAddressId,
+            ShipMethod = dto.ShipMethod,
+            CreditCardApprovalCode = dto.CreditCardApprovalCode,
+            SubTotal = dto.SubTotal,
+            TaxAmt = dto.TaxAmt,
+            Freight = dto.Freight,
+            TotalDue = dto.TotalDue,
+            Comment = dto.Comment,
+            RowGuid = dto.RowGuid,
+            ModifiedDate = dto.ModifiedDate
+        };
+    }
+
+    public static SalesOrderHeader MapFromDtoToEntity(SalesOrderHeaderForUpdateDto dto)
+    {
+        return new SalesOrderHeader
+        {
+            AccountNumber = dto.AccountNumber,
+            CreditCardApprovalCode = dto.CreditCardApprovalCode,
+            Comment = dto.Comment,
+            ModifiedDate = dto.ModifiedDate
+        };
+    }
+
     public static SalesOrderHeaderDto MapFromEntityToDto(SalesOrderHeader entity)
     {
         return new SalesOrderHeaderDto
@@ -112,10 +151,8 @@ public static class Mapper
                 RowGuid = s.RowGuid,
                 ModifiedDate = s.ModifiedDate,
                 SalesOrderHeaderId = s.SalesOrderHeaderId
-            })
-                    .ToList()
-        })
-            .ToList();
+            }).ToList()
+        }).ToList();
     }
 
     public static IEnumerable<SalesOrderHeader> MapFromDtosToEntities(IEnumerable<SalesOrderHeaderDto> dtos)
@@ -157,5 +194,13 @@ public static class Mapper
                 SalesOrderHeaderId = s.SalesOrderHeaderId
             }).ToList()
         }).ToList();
+    }
+
+    public static SalesOrderHeader UpdateEntityWithDto(SalesOrderHeader entityToBeUpdated, SalesOrderHeaderForUpdateDto updatedDto)
+    {
+        entityToBeUpdated.AccountNumber = updatedDto.AccountNumber;
+        entityToBeUpdated.CreditCardApprovalCode = updatedDto.CreditCardApprovalCode;
+        entityToBeUpdated.Comment = updatedDto.Comment;
+        entityToBeUpdated.ModifiedDate = updatedDto.ModifiedDate;
     }
 }

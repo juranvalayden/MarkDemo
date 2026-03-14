@@ -1,8 +1,7 @@
 ﻿namespace MarkDemo.Application.Dtos;
 
-public record SalesOrderHeaderDto
+public record SalesOrderHeaderForCreationDto
 {
-    public int Id { get; init; }
     public byte RevisionNumber { get; init; }
     public DateTime OrderDate { get; init; }
     public DateTime DueDate { get; init; }
@@ -24,7 +23,4 @@ public record SalesOrderHeaderDto
     public string? Comment { get; init; }
     public Guid RowGuid { get; init; }
     public DateTime ModifiedDate { get; init; }
-
-    // Navigation
-    public ICollection<SalesOrderDetailDto> SalesOrderDetails { get; init; } = new List<SalesOrderDetailDto>();
 }

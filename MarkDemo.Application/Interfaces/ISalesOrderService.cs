@@ -11,12 +11,11 @@ public interface ISalesOrderService
     Task<SalesOrderHeaderDto?> GetSalesOrderHeaderByIdAsync(int id, CancellationToken cancellationToken = default);
 
     // add
-    // void AddSalesOrderHeader(SalesOrderHeader entityForCreation);
-    // update
-    // void UpdateSalesOrderHeader(int id, SalesOrderHeader entityForUpdate);
-    // delete
-    // void DeleteSalesOrderHeader(int id);
+    Task<SalesOrderHeaderDto> AddSalesOrderHeaderAsync(SalesOrderHeaderForCreationDto salesOrderHeaderForCreationDto, CancellationToken cancellationToken = default);
 
-    // this should go into your unit of work
-    // Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default);
+    // update
+    Task<SalesOrderHeaderDto> UpdateSalesOrderHeaderAsync(int id, SalesOrderHeaderForUpdateDto salesOrderHeaderForUpdateDto, CancellationToken cancellationToken = default);
+    
+    // delete
+    Task<bool> DeleteSalesOrderHeaderAsync(int id, CancellationToken cancellationToken = default);
 }

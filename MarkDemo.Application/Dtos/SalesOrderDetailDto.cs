@@ -2,17 +2,17 @@
 
 public record SalesOrderDetailDto
 {
-    public int Id { get; set; }
-    public short OrderQty { get; set; }
-    public int ProductId { get; set; }
-    public decimal UnitPrice { get; set; }
-    public decimal UnitPriceDiscount { get; set; }
-    public decimal? LineTotal { get; set; }
-    public Guid RowGuid { get; set; }
-    public DateTime ModifiedDate { get; set; }
+    public int Id { get; init; }
+    public short OrderQty { get; init; }
+    public int ProductId { get; init; }
+    public decimal UnitPrice { get; init; }
+    public decimal UnitPriceDiscount { get; init; }
+    public decimal? LineTotal { get; init; }
+    public Guid RowGuid { get; init; }
+    public DateTime ModifiedDate { get; init; }
 
     // Navigation
-    public int SalesOrderHeaderId { get; set; }
+    public int SalesOrderHeaderId { get; init; }
 
-    public ICollection<SalesOrderDetailDto> SalesOrderDetails { get; set; } = new List<SalesOrderDetailDto>();
+    public ICollection<SalesOrderDetailDto> SalesOrderDetails { get; init; } = new List<SalesOrderDetailDto>();
 }
