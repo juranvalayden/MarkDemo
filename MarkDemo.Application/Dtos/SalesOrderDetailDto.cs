@@ -11,8 +11,6 @@ public record SalesOrderDetailDto
     public Guid RowGuid { get; init; }
     public DateTime ModifiedDate { get; init; }
 
-    // Navigation
     public int SalesOrderHeaderId { get; init; }
-
     public ICollection<SalesOrderDetailDto> SalesOrderDetails { get; init; } = new List<SalesOrderDetailDto>();
 }

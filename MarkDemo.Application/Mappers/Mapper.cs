@@ -5,79 +5,39 @@ namespace MarkDemo.Application.Mappers;
 
 public static class Mapper
 {
-    public static SalesOrderHeader MapFromDtoToEntity(SalesOrderHeaderDto dto)
+    public static SalesOrderHeader MapCreationDtoToEntity(SalesOrderHeaderForCreationDto dto)
     {
+        // business logic applied
+        var currentDate = DateTime.UtcNow;
+        var dueDate = currentDate.AddDays(14);
+        var rowGuid = Guid.NewGuid();
+
         return new SalesOrderHeader
         {
-            Id = dto.Id,
+            CustomerId = dto.CustomerId,
+
             RevisionNumber = dto.RevisionNumber,
-            OrderDate = dto.OrderDate,
-            DueDate = dto.DueDate,
-            ShipDate = dto.ShipDate,
             Status = dto.Status,
             OnlineOrderFlag = dto.OnlineOrderFlag,
-            SalesOrderNumber = dto.SalesOrderNumber,
-            PurchaseOrderNumber = dto.PurchaseOrderNumber,
-            AccountNumber = dto.AccountNumber,
-            CustomerId = dto.CustomerId,
-            ShipToAddressId = dto.ShipToAddressId,
-            BillToAddressId = dto.BillToAddressId,
             ShipMethod = dto.ShipMethod,
-            CreditCardApprovalCode = dto.CreditCardApprovalCode,
             SubTotal = dto.SubTotal,
             TaxAmt = dto.TaxAmt,
             Freight = dto.Freight,
-            TotalDue = dto.TotalDue,
-            Comment = dto.Comment,
-            RowGuid = dto.RowGuid,
-            ModifiedDate = dto.ModifiedDate
-        };
-    }
 
-    public static SalesOrderHeader MapFromDtoToEntity(SalesOrderHeaderForCreationDto dto)
-    {
-        return new SalesOrderHeader
-        {
-            RevisionNumber = dto.RevisionNumber,
-            OrderDate = dto.OrderDate,
-            DueDate = dto.DueDate,
-            ShipDate = dto.ShipDate,
-            Status = dto.Status,
-            OnlineOrderFlag = dto.OnlineOrderFlag,
-            PurchaseOrderNumber = dto.PurchaseOrderNumber,
-            AccountNumber = dto.AccountNumber,
-            CustomerId = dto.CustomerId,
-            ShipToAddressId = dto.ShipToAddressId,
-            BillToAddressId = dto.BillToAddressId,
-            ShipMethod = dto.ShipMethod,
-            CreditCardApprovalCode = dto.CreditCardApprovalCode,
-            SubTotal = dto.SubTotal,
-            TaxAmt = dto.TaxAmt,
-            Freight = dto.Freight,
-            Comment = dto.Comment,
-            RowGuid = dto.RowGuid,
-            ModifiedDate = dto.ModifiedDate,
-            SalesOrderDetails = dto.SalesOrderDetails.Select(s => new SalesOrderDetail
-            {
-                OrderQty = s.OrderQty,
-                ProductId = s.ProductId,
-                UnitPrice = s.UnitPrice,
-                UnitPriceDiscount = s.UnitPriceDiscount,
-                RowGuid = s.RowGuid,
-                ModifiedDate = s.ModifiedDate,
-                SalesOrderHeaderId = s.SalesOrderHeaderId
-            }).ToList()
-        };
-    }
+            // System-managed fields
+            DueDate = dueDate,
+            RowGuid = rowGuid,
+            OrderDate = currentDate,
+            ModifiedDate = currentDate,
 
-    public static SalesOrderHeader MapFromDtoToEntity(SalesOrderHeaderForUpdateDto dto)
-    {
-        return new SalesOrderHeader
-        {
-            AccountNumber = dto.AccountNumber,
-            CreditCardApprovalCode = dto.CreditCardApprovalCode,
-            Comment = dto.Comment,
-            ModifiedDate = dto.ModifiedDate
+            // optional/nullable fields
+            AccountNumber = dto?.AccountNumber ?? null,
+            PurchaseOrderNumber = dto?.PurchaseOrderNumber ?? null,
+            CreditCardApprovalCode = dto?.CreditCardApprovalCode ?? null,
+            ShipToAddressId = dto?.ShipToAddressId ?? null,
+            BillToAddressId = dto?.BillToAddressId ?? null,
+            Comment = dto?.Comment ?? null,
+            ShipDate = dto?.ShipDate ?? null
         };
     }
 
@@ -163,53 +123,14 @@ public static class Mapper
         }).ToList();
     }
 
-    public static IEnumerable<SalesOrderHeader> MapFromDtosToEntities(IEnumerable<SalesOrderHeaderDto> dtos)
-    {
-        return dtos.Select(dto => new SalesOrderHeader
-        {
-            Id = dto.Id,
-            RevisionNumber = dto.RevisionNumber,
-            OrderDate = dto.OrderDate,
-            DueDate = dto.DueDate,
-            ShipDate = dto.ShipDate,
-            Status = dto.Status,
-            OnlineOrderFlag = dto.OnlineOrderFlag,
-            SalesOrderNumber = dto.SalesOrderNumber,
-            PurchaseOrderNumber = dto.PurchaseOrderNumber,
-            AccountNumber = dto.AccountNumber,
-            CustomerId = dto.CustomerId,
-            ShipToAddressId = dto.ShipToAddressId,
-            BillToAddressId = dto.BillToAddressId,
-            ShipMethod = dto.ShipMethod,
-            CreditCardApprovalCode = dto.CreditCardApprovalCode,
-            SubTotal = dto.SubTotal,
-            TaxAmt = dto.TaxAmt,
-            Freight = dto.Freight,
-            TotalDue = dto.TotalDue,
-            Comment = dto.Comment,
-            RowGuid = dto.RowGuid,
-            ModifiedDate = dto.ModifiedDate,
-            SalesOrderDetails = dto.SalesOrderDetails.Select(s => new SalesOrderDetail
-            {
-                Id = s.Id,
-                OrderQty = s.OrderQty,
-                ProductId = s.ProductId,
-                UnitPrice = s.UnitPrice,
-                UnitPriceDiscount = s.UnitPriceDiscount,
-                LineTotal = s.LineTotal,
-                RowGuid = s.RowGuid,
-                ModifiedDate = s.ModifiedDate,
-                SalesOrderHeaderId = s.SalesOrderHeaderId
-            }).ToList()
-        }).ToList();
-    }
-
     public static SalesOrderHeader UpdateEntityWithDto(SalesOrderHeader entityToBeUpdated, SalesOrderHeaderForUpdateDto updatedDto)
     {
-        entityToBeUpdated.AccountNumber = updatedDto.AccountNumber;
+        // business logic applied
+        var currentDate = DateTime.UtcNow;
+
         entityToBeUpdated.CreditCardApprovalCode = updatedDto.CreditCardApprovalCode;
         entityToBeUpdated.Comment = updatedDto.Comment;
-        entityToBeUpdated.ModifiedDate = updatedDto.ModifiedDate;
+        entityToBeUpdated.ModifiedDate = currentDate;
 
         return entityToBeUpdated;
     }

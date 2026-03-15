@@ -1,28 +1,54 @@
-﻿namespace MarkDemo.Application.Dtos;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record SalesOrderHeaderForCreationDto
+namespace MarkDemo.Application.Dtos;
+public class SalesOrderHeaderForCreationDto
 {
-    public byte RevisionNumber { get; init; }
-    public DateTime OrderDate { get; init; }
-    public DateTime DueDate { get; init; }
-    public DateTime? ShipDate { get; init; }
-    public byte Status { get; init; }
-    public bool OnlineOrderFlag { get; init; }
-    // SalesOrderNumber excluded (calculated by AdventureWorks)
-    public string? PurchaseOrderNumber { get; init; }
-    public string? AccountNumber { get; init; }
-    public int CustomerId { get; init; }
-    public int? ShipToAddressId { get; init; }
-    public int? BillToAddressId { get; init; }
-    public string ShipMethod { get; init; } = string.Empty;
-    public string? CreditCardApprovalCode { get; init; }
-    public decimal SubTotal { get; init; }
-    public decimal TaxAmt { get; init; }
-    public decimal Freight { get; init; }
-    // TotalDue excluded (calculated by AdventureWorks)
-    public string? Comment { get; init; }
-    public Guid RowGuid { get; init; }
-    public DateTime ModifiedDate { get; init; }
+    // Required fields
+    [Required]
+    [Range(0, 255)]
+    public byte RevisionNumber { get; set; }
 
-    public ICollection<SalesOrderDetailForCreationDto> SalesOrderDetails { get; init; } = new List<SalesOrderDetailForCreationDto>();
+    [Required]
+    [Range(0, 255)]
+    public byte Status { get; set; }
+
+    [Required]
+    public bool OnlineOrderFlag { get; set; }
+
+    [Required]
+    public int CustomerId { get; set; }
+
+    [Required]
+    [StringLength(100)]
+    public string ShipMethod { get; set; } = string.Empty;
+
+    [Required]
+    [Range(0, double.MaxValue)]
+    public decimal SubTotal { get; set; }
+
+    [Required]
+    [Range(0, double.MaxValue)]
+    public decimal TaxAmt { get; set; }
+
+    [Required]
+    [Range(0, double.MaxValue)]
+    public decimal Freight { get; set; }
+
+    // Optional fields
+    public DateTime? ShipDate { get; set; }
+
+    [StringLength(50)]
+    public string? PurchaseOrderNumber { get; set; }
+
+    [StringLength(30)]
+    public string? AccountNumber { get; set; }
+
+    public int? ShipToAddressId { get; set; }
+
+    public int? BillToAddressId { get; set; }
+
+    [StringLength(15)]
+    public string? CreditCardApprovalCode { get; set; }
+
+    public string? Comment { get; set; }
 }

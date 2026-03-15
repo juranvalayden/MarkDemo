@@ -6,32 +6,24 @@ using Microsoft.Extensions.Logging;
 
 namespace MarkDemo.Infrastructure.Repositories;
 
-public class SalesOrderRepository : ISalesOrderRepository
+public class SalesOrderRepository(ILogger<SalesOrderRepository> logger, SalesDbContext salesDbContext) : ISalesOrderRepository
 {
-    private readonly ILogger<SalesOrderRepository> _logger;
-    private readonly SalesDbContext _salesDbContext;
-
-    public SalesOrderRepository(ILogger<SalesOrderRepository> logger, SalesDbContext salesDbContext)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _salesDbContext = salesDbContext ?? throw new ArgumentNullException(nameof(salesDbContext));
-    }
+    private readonly ILogger<SalesOrderRepository> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly SalesDbContext _salesDbContext = salesDbContext ?? throw new ArgumentNullException(nameof(salesDbContext));
 
     public async Task<IEnumerable<SalesOrderHeader>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         try
         {
-            var entities = await _salesDbContext.SalesOrderHeaders
-                .Include(soh => soh.SalesOrderDetails)
+            return await _salesDbContext
+                .SalesOrderHeaders
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
-
-            return entities;
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error occurred GetAllAsync getting sale.");
-            return [];
+            _logger.LogError(e, "Error occurred getting all sales order headers from the db.");
+            throw;
         }
     }
 
@@ -40,20 +32,20 @@ public class SalesOrderRepository : ISalesOrderRepository
         try
         {
             return await _salesDbContext
-                .Set<SalesOrderHeader>()
+                .SalesOrderHeaders
                 .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error occurred GetByIdAsync getting {Id}.", id);
-            return null;
+            _logger.LogError(e, "Error occurred getting sales order header by {Id} from the db.", id);
+            throw;
         }
     }
 
     public SalesOrderHeader Add(SalesOrderHeader entity)
     {
         return _salesDbContext
-            .Set<SalesOrderHeader>()
+            .SalesOrderHeaders
             .Add(entity)
             .Entity;
     }
@@ -61,16 +53,17 @@ public class SalesOrderRepository : ISalesOrderRepository
     public SalesOrderHeader Update(SalesOrderHeader entity)
     {
         return _salesDbContext
-            .Set<SalesOrderHeader>()
+            .SalesOrderHeaders
             .Update(entity)
             .Entity;
     }
 
-    public void Delete(SalesOrderHeader entityForDeletion)
+    public SalesOrderHeader Delete(SalesOrderHeader entityForDeletion)
     {
-        _salesDbContext
-            .Set<SalesOrderHeader>()
-            .Remove(entityForDeletion);
+        return _salesDbContext
+            .SalesOrderHeaders
+            .Remove(entityForDeletion)
+            .Entity;
     }
 
     public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -81,8 +74,8 @@ public class SalesOrderRepository : ISalesOrderRepository
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error occurred SaveChangesAsync.");
-            return false;
+            _logger.LogError(e, "Error occurred saving sales order header to the db.");
+            throw;
         }
     }
 }

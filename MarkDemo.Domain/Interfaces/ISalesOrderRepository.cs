@@ -9,7 +9,7 @@ public interface ISalesOrderRepository
 
     SalesOrderHeader Add(SalesOrderHeader entityForCreation);
     SalesOrderHeader Update(SalesOrderHeader entity);
-    void Delete(SalesOrderHeader entityForDeletion);
+    SalesOrderHeader Delete(SalesOrderHeader entityForDeletion);
 
     Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

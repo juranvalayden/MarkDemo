@@ -23,6 +23,6 @@ public static class DependencyInjection
             });
         });
 
-        services.AddScoped<ISalesOrderRepository, SalesOrderRepository>();
+        services.AddTransient<ISalesOrderRepository, SalesOrderRepository>();
     }
 }

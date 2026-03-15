@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MarkDemo.Infrastructure.Migrations
 {
     [DbContext(typeof(SalesDbContext))]
-    [Migration("20260314155549_Initial")]
+    [Migration("20260315095544_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -25,6 +25,32 @@ namespace MarkDemo.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("MarkDemo.Domain.Entities.Address", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Address", "SalesLT");
+                });
+
+            modelBuilder.Entity("MarkDemo.Domain.Entities.Customer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Customer", "SalesLT");
+                });
 
             modelBuilder.Entity("MarkDemo.Domain.Entities.SalesOrderDetail", b =>
                 {
@@ -40,8 +66,10 @@ namespace MarkDemo.Infrastructure.Migrations
                         .HasColumnType("numeric(38,6)");
 
                     b.Property<DateTime>("ModifiedDate")
+                        .ValueGeneratedOnAdd()
                         .HasPrecision(7)
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<short>("OrderQty")
                         .HasColumnType("smallint");
@@ -51,8 +79,10 @@ namespace MarkDemo.Infrastructure.Migrations
                         .HasColumnName("ProductID");
 
                     b.Property<Guid>("RowGuid")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("rowguid");
+                        .HasColumnName("rowguid")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<int>("SalesOrderHeaderId")
                         .HasColumnType("int")
@@ -83,91 +113,131 @@ namespace MarkDemo.Infrastructure.Migrations
 
                     b.Property<string>("AccountNumber")
                         .HasMaxLength(30)
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(30)")
+                        .HasColumnName("AccountNumber");
 
                     b.Property<int?>("BillToAddressId")
                         .HasColumnType("int")
                         .HasColumnName("BillToAddressID");
 
                     b.Property<string>("Comment")
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Comment");
 
                     b.Property<string>("CreditCardApprovalCode")
                         .HasMaxLength(15)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(15)");
+                        .HasColumnType("nvarchar(15)")
+                        .HasColumnName("CreditCardApprovalCode");
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int")
                         .HasColumnName("CustomerID");
 
                     b.Property<DateTime>("DueDate")
-                        .HasPrecision(7)
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("DueDate");
 
                     b.Property<decimal>("Freight")
-                        .HasColumnType("money");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("money")
+                        .HasDefaultValue(0.00m)
+                        .HasColumnName("Freight");
 
                     b.Property<DateTime>("ModifiedDate")
-                        .HasPrecision(7)
-                        .HasColumnType("datetime");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("ModifiedDate")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<bool>("OnlineOrderFlag")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("OnlineOrderFlag");
 
                     b.Property<DateTime>("OrderDate")
-                        .HasPrecision(7)
-                        .HasColumnType("datetime");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("OrderDate")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("PurchaseOrderNumber")
                         .HasMaxLength(50)
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("PurchaseOrderNumber");
 
                     b.Property<byte>("RevisionNumber")
-                        .HasColumnType("tinyint");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint")
+                        .HasDefaultValue((byte)0)
+                        .HasColumnName("RevisionNumber");
 
                     b.Property<Guid>("RowGuid")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasColumnName("rowguid");
+                        .HasColumnName("rowguid")
+                        .HasDefaultValueSql("newid()");
 
                     b.Property<string>("SalesOrderNumber")
+                        .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasMaxLength(50)
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("SalesOrderNumber");
 
                     b.Property<DateTime?>("ShipDate")
-                        .HasPrecision(7)
-                        .HasColumnType("datetime");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("ShipDate");
 
                     b.Property<string>("ShipMethod")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .IsUnicode(true)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("ShipMethod");
 
                     b.Property<int?>("ShipToAddressId")
                         .HasColumnType("int")
                         .HasColumnName("ShipToAddressID");
 
                     b.Property<byte>("Status")
-                        .HasColumnType("tinyint");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint")
+                        .HasDefaultValue((byte)1)
+                        .HasColumnName("Status");
 
                     b.Property<decimal>("SubTotal")
-                        .HasColumnType("money");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("money")
+                        .HasDefaultValue(0.00m)
+                        .HasColumnName("SubTotal");
 
                     b.Property<decimal>("TaxAmt")
-                        .HasColumnType("money");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("money")
+                        .HasDefaultValue(0.00m)
+                        .HasColumnName("TaxAmt");
 
-                    b.Property<decimal?>("TotalDue")
+                    b.Property<decimal>("TotalDue")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("money");
+                        .HasColumnType("money")
+                        .HasColumnName("TotalDue");
 
                     b.HasKey("Id")
-                        .HasName("PK_SalesOrderHeader");
+                        .HasName("PK_SalesOrderHeader_SalesOrderID");
+
+                    b.HasIndex("BillToAddressId");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("IX_SalesOrderHeader_CustomerID");
+
+                    b.HasIndex("RowGuid")
+                        .IsUnique()
+                        .HasDatabaseName("AK_SalesOrderHeader_rowguid");
+
+                    b.HasIndex("SalesOrderNumber")
+                        .IsUnique()
+                        .HasDatabaseName("AK_SalesOrderHeader_SalesOrderNumber");
+
+                    b.HasIndex("ShipToAddressId");
 
                     b.ToTable("SalesOrderHeader", "SalesLT");
                 });
@@ -200,9 +270,35 @@ namespace MarkDemo.Infrastructure.Migrations
                         .WithMany("SalesOrderDetails")
                         .HasForeignKey("SalesOrderHeaderId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_SalesOrderDetail_SalesOrderHeader_SalesOrderID");
 
                     b.Navigation("SalesOrderHeader");
+                });
+
+            modelBuilder.Entity("MarkDemo.Domain.Entities.SalesOrderHeader", b =>
+                {
+                    b.HasOne("MarkDemo.Domain.Entities.Address", "BillingAddress")
+                        .WithMany()
+                        .HasForeignKey("BillToAddressId")
+                        .HasConstraintName("FK_SalesOrderHeader_Address_BillTo_AddressID");
+
+                    b.HasOne("MarkDemo.Domain.Entities.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MarkDemo.Domain.Entities.Address", "ShippingAddress")
+                        .WithMany()
+                        .HasForeignKey("ShipToAddressId")
+                        .HasConstraintName("FK_SalesOrderHeader_Address_ShipTo_AddressID");
+
+                    b.Navigation("BillingAddress");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("ShippingAddress");
                 });
 
             modelBuilder.Entity("MarkDemo.Domain.Entities.SalesOrderHeader", b =>

@@ -1,9 +1,13 @@
-﻿namespace MarkDemo.Application.Dtos;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MarkDemo.Application.Dtos;
 
 public record SalesOrderHeaderForUpdateDto
 {
-    public string AccountNumber { get; init; } = string.Empty;
-    public string? CreditCardApprovalCode { get; init; }
+    [Required]
+    [StringLength(15)]
+    public string CreditCardApprovalCode { get; init; } = string.Empty;
+    
+    [Required] 
     public string Comment { get; init; } = string.Empty;
-    public DateTime ModifiedDate { get; init; }
 }

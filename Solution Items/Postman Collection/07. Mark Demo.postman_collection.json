@@ -1,0 +1,238 @@
+{
+  "info": {
+    "_postman_id": "04dc01a4-1165-4ee9-8067-61653c3b0a08",
+    "name": "07. Mark Demo",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "26302119"
+  },
+  "item": [
+    {
+      "name": "GET-sales-order-headers",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:7222/api/sales",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7222",
+          "path": [
+            "api",
+            "sales"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET-sales-order-header-by-id (found)",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:7222/api/sales/71774",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7222",
+          "path": [
+            "api",
+            "sales",
+            "71774"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET-sales-order-header-by-id (not found)",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:7222/api/sales/99999",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7222",
+          "path": [
+            "api",
+            "sales",
+            "99999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST-sales-order-header",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Generate random SubTotal and Freight\r",
+              "// SubTotal between 500 and 2000\r",
+              "const subTotal = (Math.random() * (2000 - 500) + 500).toFixed(2);\r",
+              "// Freight between 20 and 200\r",
+              "const freight = (Math.random() * (200 - 20) + 20).toFixed(2);\r",
+              "\r",
+              "// TaxAmt = ~15% of (SubTotal + Freight)\r",
+              "const taxAmt = ((parseFloat(subTotal) + parseFloat(freight)) * 0.15).toFixed(2);\r",
+              "\r",
+              "// Build JSON payload (no dates, no RowGuid)\r",
+              "const payload = {\r",
+              "  RevisionNumber: 0,\r",
+              "  Status: 5,\r",
+              "  OnlineOrderFlag: false,\r",
+              "  CustomerID: 29847,\r",
+              "  ShipMethod: \"CARGO TRANSPORT 5\",\r",
+              "  SubTotal: parseFloat(subTotal),\r",
+              "  TaxAmt: parseFloat(taxAmt),\r",
+              "  Freight: parseFloat(freight),\r",
+              "\r",
+              "  ShipDate: null,\r",
+              "  PurchaseOrderNumber: null,\r",
+              "  AccountNumber: null,\r",
+              "  ShipToAddressID: null,\r",
+              "  BillToAddressID: null,\r",
+              "  CreditCardApprovalCode: null,\r",
+              "  Comment: null\r",
+              "};\r",
+              "\r",
+              "// Save to environment variable\r",
+              "pm.environment.set(\"salesOrderPayload\", JSON.stringify(payload));"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{{salesOrderPayload}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:7222/api/sales",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7222",
+          "path": [
+            "api",
+            "sales"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PUT-sales-order-header",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Get current date/time in ISO 8601 format\r",
+              "let now = new Date().toISOString();\r",
+              "\r",
+              "// Build the request body\r",
+              "let body = {\r",
+              "  accountNumber: \"ACCT-987456\",\r",
+              "  creditCardApprovalCode: \"AUTH987\",\r",
+              "  comment: `### Mark&Ju updated this... :) #### | Timestamp: ${now}`,\r",
+              "  modifiedDate: now\r",
+              "};\r",
+              "\r",
+              "// Save the updated body into an environment variable\r",
+              "pm.environment.set(\"requestBody\", JSON.stringify(body));"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{{requestBody}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://localhost:7222/api/sales/71774",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7222",
+          "path": [
+            "api",
+            "sales",
+            "71774"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE-sales-order-header",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://localhost:7222/api/sales/99999",
+          "protocol": "https",
+          "host": [
+            "localhost"
+          ],
+          "port": "7222",
+          "path": [
+            "api",
+            "sales",
+            "99999"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

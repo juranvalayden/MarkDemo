@@ -10,6 +10,7 @@ public class SalesController : ControllerBase
 {
     private readonly ILogger<SalesController> _logger;
     private readonly ISalesOrderService _salesOrderService;
+    private const string _getByIdRouteName = "GetSalesOrderHeaderById";
 
     public SalesController(ILogger<SalesController> logger, ISalesOrderService salesOrderService)
     {
@@ -22,30 +23,30 @@ public class SalesController : ControllerBase
     {
         try
         {
-            var dtos = await _salesOrderService.GetSalesOrderHeadersAsync(cancellationToken);
-            return Ok(dtos);
+            var salesOrderHeaderDtos = await _salesOrderService.GetSalesOrderHeadersAsync(cancellationToken);
+            return Ok(salesOrderHeaderDtos);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error occurred in GetAllAsync");
+            _logger.LogError(e, "Error occurred in the API when getting all sales order headers.");
             return BadRequest();
         }
     }
 
-    [HttpGet("{id:int}", Name = "GetSalesOrderHeaderById")]
+    [HttpGet("{id:int}", Name = _getByIdRouteName)]
     public async Task<ActionResult<SalesOrderHeaderDto>> GetSalesOrderHeaderByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         try
         {
-            var dto = await _salesOrderService.GetSalesOrderHeaderByIdAsync(id, cancellationToken);
+            var salesOrderHeaderDto = await _salesOrderService.GetSalesOrderHeaderByIdAsync(id, cancellationToken);
 
-            if (dto == null) return NotFound();
+            if (salesOrderHeaderDto == null) return NotFound();
 
-            return Ok(dto);
+            return Ok(salesOrderHeaderDto);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error occurred in GetByIdAsync");
+            _logger.LogError(e, "Error occurred in the API when getting sales order header by {Id}.", id);
             return BadRequest();
         }
     }
@@ -55,18 +56,21 @@ public class SalesController : ControllerBase
     {
         try
         {
-            var createdSaleOrderHeader =
-                await _salesOrderService.AddSalesOrderHeaderAsync(salesOrderHeaderForCreationDto, cancellationToken);
+            var createdSalesOrderHeaderDto = await _salesOrderService.AddSalesOrderHeaderAsync(salesOrderHeaderForCreationDto, cancellationToken);
 
-            if (createdSaleOrderHeader == null) return BadRequest();
+            if (createdSalesOrderHeaderDto == null) return BadRequest();
 
-            return CreatedAtRoute("GetSalesOrderHeaderById", new { createdSaleOrderHeader.Id }, createdSaleOrderHeader);
+            var routeValues = new
+            {
+                createdSalesOrderHeaderDto.Id
+            };
+            
+            return CreatedAtRoute(_getByIdRouteName, routeValues, createdSalesOrderHeaderDto);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error occurred in GetByIdAsync");
+            _logger.LogError(e, "Error occurred in the API when creating sales order header.");
             return BadRequest();
         }
     }
-
 }
