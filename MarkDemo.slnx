@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/solution items/" />
+  <Folder Name="/solution items/postman collection/">
+    <File Path="Solution Items/Postman Collection/07. Mark Demo.postman_collection.json" />
+  </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/1 - Presentation/">
     <Project Path="MarkDemo.Api/MarkDemo.Api.csproj" />

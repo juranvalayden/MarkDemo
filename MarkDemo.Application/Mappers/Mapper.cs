@@ -125,12 +125,8 @@ public static class Mapper
 
     public static SalesOrderHeader UpdateEntityWithDto(SalesOrderHeader entityToBeUpdated, SalesOrderHeaderForUpdateDto updatedDto)
     {
-        // business logic applied
-        var currentDate = DateTime.UtcNow;
-
         entityToBeUpdated.CreditCardApprovalCode = updatedDto.CreditCardApprovalCode;
         entityToBeUpdated.Comment = updatedDto.Comment;
-        entityToBeUpdated.ModifiedDate = currentDate;
 
         return entityToBeUpdated;
     }

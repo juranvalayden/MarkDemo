@@ -73,4 +73,14 @@ public class SalesController : ControllerBase
             return BadRequest();
         }
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult<SalesOrderHeaderDto>> UpdateSalesOrderHeaderAsync(int id, SalesOrderHeaderForUpdateDto salesOrderHeaderForUpdateDto, CancellationToken cancellationToken = default)
+    {
+        var updatedSalesOrderHeaderDto = await _salesOrderService.UpdateSalesOrderHeaderAsync(id, salesOrderHeaderForUpdateDto, cancellationToken);
+
+        if (updatedSalesOrderHeaderDto == null) return BadRequest();
+
+        return NoContent();
+    }
 }
